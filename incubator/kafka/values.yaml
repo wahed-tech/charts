@@ -38,7 +38,7 @@ podManagementPolicy: OrderedReady
 ## If RBAC is enabled on the cluster, the Kafka init container needs a service account
 ## with permissisions sufficient to apply pod labels
 rbac:
-  enabled: false
+  enabled: true
 
 ## Useful if using any custom authorizer
 ## Pass in some secrets to use (if required)
@@ -140,7 +140,7 @@ external:
     useExternal: true
   # create an A record for each statefulset pod
   distinct: false
-  enabled: false
+  enabled: true
   servicePort: 19092
   firstListenerPort: 31090
   domain: cluster.local
@@ -171,10 +171,10 @@ configurationOverrides:
   ## - https://cwiki.apache.org/confluence/display/KAFKA/KIP-103%3A+Separation+of+Internal+and+External+traffic
   ##
   ## Setting "advertised.listeners" here appends to "PLAINTEXT://${POD_IP}:9092,"
-  # "advertised.listeners": |-
-  #   EXTERNAL://kafka.cluster.local:$((31090 + ${KAFKA_BROKER_ID}))
-  # "listener.security.protocol.map": |-
-  #   PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+   "advertised.listeners": |-
+     EXTERNAL://$(HOST_IP):$((31090 + ${KAFKA_BROKER_ID}))
+   "listener.security.protocol.map": |-
+     PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
 
 ## set extra ENVs
 #   key: "value"
